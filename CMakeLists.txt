@@ -22,6 +22,7 @@ endif()
 # Add source files
 set(PROJECT_SOURCES
     "${CMAKE_SOURCE_DIR}/main.cpp"
+    "${CMAKE_SOURCE_DIR}/aggregate.h"
 )
 
 # Add include directories
