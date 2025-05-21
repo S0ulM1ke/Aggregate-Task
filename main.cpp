@@ -22,8 +22,19 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <numeric>
 
 #include "aggregate.h"
+
+class Add {
+    public:
+        int operator()(int a, int b) {
+            counter++;
+            return a + b;
+        }
+
+        int counter = 0;
+};
 
 int add(int a, int b) {
     return a + b;
@@ -41,12 +52,20 @@ std::string concat(const std::string& a, const int b) {
 int main() {
     std::vector<int> xs = { 1, 2, 3, 4 };
 
+    Add addObj;
+
     auto sum = algo::vectorSum(xs);
 
     std::cout << "Sum: " << sum << std::endl;
 
-    auto agrAdd = algo::aggregate(xs, add);
+    auto agrAdd = algo::aggregate(xs, addObj);
     std::cout << "Aggregate with add: " << agrAdd << std::endl;
+    std::cout << "Add object counter: " << addObj.counter << std::endl;
+
+    auto agrLambda = algo::aggregate(xs, [](int a, int b) { return a + b; });
+    std::cout << "Aggregate with lambda: " << agrLambda << std::endl;
+
+    //auto agrAddFunc = std::accumulate(xs.begin(), xs.end(), 0, addObj);
 
     auto agrMul = algo::aggregate(xs, mul);
     std::cout << "Aggregate with mul: " << agrMul << std::endl;
@@ -63,6 +82,9 @@ int main() {
     int arr[] = { 1, 2, 3, 4 };
     auto agrArray = algo::aggregate(arr, add, 0);
     std::cout << "Aggregate with array and add: " << agrArray << std::endl;
+
+    auto agrArrayNoInit = algo::aggregate_recursive(arr, add);
+    std::cout << "Aggregate with array and add without initial value: " << agrArrayNoInit << std::endl;
 
     auto recAgrArray = algo::aggregate_recursive(arr, add, 0);
     std::cout << "Recursive aggregate with array and add: " << recAgrArray << std::endl;
